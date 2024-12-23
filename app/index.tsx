@@ -1,10 +1,11 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Text, View, StyleSheet, Pressable, Share } from "react-native";
 import {
   Inter_400Regular,
   Inter_700Bold,
   useFonts,
 } from "@expo-google-fonts/inter";
 import { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Index() {
   let [fontsLoaded] = useFonts({
@@ -31,12 +32,37 @@ export default function Index() {
     fetchAdvice();
   };
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: "Check out this awesome app",
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Shared with activity type: ", result.activityType);
+        } else {
+          console.log("Shared successfully");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share dismissed");
+      }
+    } catch (error) {
+      console.error("Error sharing: ", error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {advice && <Text style={styles.text}>{advice}</Text>}
-      <Pressable onPress={getAdvice}>
-        <Text style={styles.new}>Get New</Text>
-      </Pressable>
+      <View style={styles.bottom}>
+        <Pressable onPress={getAdvice}>
+          <Text style={styles.new}>Get New</Text>
+        </Pressable>
+        <Pressable onPress={onShare}>
+          <Ionicons name="share-outline" size={24} color="black" />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -57,5 +83,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 20,
     textAlign: "right",
+  },
+  bottom: {
+    position: "absolute",
+    bottom: 20,
+    elevation: 5,
   },
 });
