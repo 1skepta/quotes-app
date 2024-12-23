@@ -1,4 +1,5 @@
-import { Text, View, StyleSheet, Pressable, Share } from "react-native";
+import React, { useRef } from "react";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import {
   Inter_400Regular,
   Inter_700Bold,
@@ -6,6 +7,8 @@ import {
 } from "@expo-google-fonts/inter";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { captureRef } from "react-native-view-shot";
+import * as Sharing from "expo-sharing";
 
 export default function Index() {
   let [fontsLoaded] = useFonts({
@@ -28,44 +31,51 @@ export default function Index() {
         .catch((error) => console.error("Error fetching advice ", error))
     );
   };
+
   const getAdvice = () => {
     fetchAdvice();
   };
 
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: "Check out this awesome app",
-      });
+  const viewRef = useRef<View>(null);
 
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          console.log("Shared with activity type: ", result.activityType);
-        } else {
-          console.log("Shared successfully");
+  const shareScreenshot = async () => {
+    try {
+      setTimeout(async () => {
+        try {
+          const uri = await captureRef(viewRef, {
+            format: "png",
+            quality: 0.8,
+          });
+
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(uri);
+          } else {
+            console.log("Sharing is not available on this device");
+          }
+        } catch (error) {
+          console.error("Error capturing or sharing screenshot:", error);
         }
-      } else if (result.action === Share.dismissedAction) {
-        console.log("Share dismissed");
-      }
+      }, 500);
     } catch (error) {
-      console.error("Error sharing: ", error.message);
+      console.error("Error while initiating sharing:", error);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} ref={viewRef}>
       {advice && <Text style={styles.text}>{advice}</Text>}
       <View style={styles.bottom}>
         <Pressable onPress={getAdvice}>
           <Text style={styles.new}>Get New</Text>
         </Pressable>
-        <Pressable onPress={onShare}>
+        <Pressable onPress={shareScreenshot}>
           <Ionicons name="share-outline" size={24} color="black" />
         </Pressable>
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -87,6 +97,9 @@ const styles = StyleSheet.create({
   bottom: {
     position: "absolute",
     bottom: 20,
+    left: 20,
     elevation: 5,
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
