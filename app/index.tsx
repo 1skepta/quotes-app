@@ -67,7 +67,7 @@ export default function Index() {
         )}
       </View>
       <View style={styles.bottom}>
-        <Pressable onPress={toggleTheme}>
+        <Pressable>
           <Ionicons
             name={isDarkMode ? "sunny" : "moon"}
             size={24}
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Inter_400Regular",
     fontSize: 30,
+    width: "95%",
   },
   new: {
     fontFamily: "Inter_400Regular",
@@ -118,5 +119,6 @@ const styles = StyleSheet.create({
   },
   quotecontainer: {
     flexDirection: "row",
+    width: "100%",
   },
 });
