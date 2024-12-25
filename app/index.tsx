@@ -8,6 +8,12 @@ import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function Index() {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prevMode: boolean) => !prevMode);
+  };
+
   let [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_700Bold,
@@ -34,20 +40,51 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDarkMode ? "black" : "white",
+        },
+      ]}
+    >
       <View style={styles.quotecontainer}>
-        <Text>❝</Text>
-        {advice && <Text style={styles.text}>{advice}</Text>}
+        <Text
+          style={{
+            color: isDarkMode ? "white" : "black",
+            fontSize: 40,
+            marginBottom: 10,
+          }}
+        >
+          ❝
+        </Text>
+        {advice && (
+          <Text
+            style={[styles.text, { color: isDarkMode ? "white" : "black" }]}
+          >
+            {advice}
+          </Text>
+        )}
       </View>
       <View style={styles.bottom}>
-        <Pressable>
-          <Ionicons name="moon" size={24} color="black" />
+        <Pressable onPress={toggleTheme}>
+          <Ionicons
+            name={isDarkMode ? "sunny" : "moon"}
+            size={24}
+            color={isDarkMode ? "yellow" : "black"}
+          />
         </Pressable>
         <Pressable onPress={getAdvice}>
-          <Text style={styles.new}>Get New</Text>
+          <Text style={[styles.new, { color: isDarkMode ? "white" : "black" }]}>
+            Get New
+          </Text>
         </Pressable>
         <Pressable>
-          <Ionicons name="share-outline" size={24} color="black" />
+          <Ionicons
+            name="share-outline"
+            size={24}
+            color={isDarkMode ? "white" : "black"}
+          />
         </Pressable>
       </View>
     </View>
@@ -58,7 +95,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#ffffff",
     padding: 20,
     textAlign: "left",
   },
@@ -68,6 +104,7 @@ const styles = StyleSheet.create({
   },
   new: {
     fontFamily: "Inter_400Regular",
+    fontSize: 18,
   },
   bottom: {
     position: "absolute",
