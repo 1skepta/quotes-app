@@ -22,7 +22,7 @@ export default function RootLayout() {
                 fontWeight: 700,
               }}
             >
-              ❝
+              QUOTES
             </Text>
           ),
         }}

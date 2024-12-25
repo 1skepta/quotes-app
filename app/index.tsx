@@ -35,8 +35,14 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      {advice && <Text style={styles.text}>{advice}</Text>}
+      <View style={styles.quotecontainer}>
+        <Text>❝</Text>
+        {advice && <Text style={styles.text}>{advice}</Text>}
+      </View>
       <View style={styles.bottom}>
+        <Pressable>
+          <Ionicons name="moon" size={24} color="black" />
+        </Pressable>
         <Pressable onPress={getAdvice}>
           <Text style={styles.new}>Get New</Text>
         </Pressable>
@@ -62,16 +68,18 @@ const styles = StyleSheet.create({
   },
   new: {
     fontFamily: "Inter_400Regular",
-    fontSize: 20,
-    marginTop: 20,
-    textAlign: "right",
   },
   bottom: {
     position: "absolute",
-    bottom: 20,
+    bottom: 50,
     left: 20,
     elevation: 5,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  quotecontainer: {
+    flexDirection: "row",
   },
 });
