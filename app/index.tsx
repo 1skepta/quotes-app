@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import {
   Inter_400Regular,
@@ -7,8 +6,6 @@ import {
 } from "@expo-google-fonts/inter";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { captureRef } from "react-native-view-shot";
-import * as Sharing from "expo-sharing";
 
 export default function Index() {
   let [fontsLoaded] = useFonts({
@@ -36,39 +33,14 @@ export default function Index() {
     fetchAdvice();
   };
 
-  const viewRef = useRef<View>(null);
-
-  const shareScreenshot = async () => {
-    try {
-      setTimeout(async () => {
-        try {
-          const uri = await captureRef(viewRef, {
-            format: "png",
-            quality: 0.8,
-          });
-
-          if (await Sharing.isAvailableAsync()) {
-            await Sharing.shareAsync(uri);
-          } else {
-            console.log("Sharing is not available on this device");
-          }
-        } catch (error) {
-          console.error("Error capturing or sharing screenshot:", error);
-        }
-      }, 500);
-    } catch (error) {
-      console.error("Error while initiating sharing:", error);
-    }
-  };
-
   return (
-    <View style={styles.container} ref={viewRef}>
+    <View style={styles.container}>
       {advice && <Text style={styles.text}>{advice}</Text>}
       <View style={styles.bottom}>
         <Pressable onPress={getAdvice}>
           <Text style={styles.new}>Get New</Text>
         </Pressable>
-        <Pressable onPress={shareScreenshot}>
+        <Pressable>
           <Ionicons name="share-outline" size={24} color="black" />
         </Pressable>
       </View>
